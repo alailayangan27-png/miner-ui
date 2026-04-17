@@ -1,75 +1,61 @@
 import { useEffect, useState } from "react";
-import { TonConnectButton, useTonConnectUI } from "@tonconnect/ui-react";
+import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
+import { motion } from "framer-motion";
 
-const API = "https://mining-production-ad0d.up.railway.app";
-const RECEIVER = "UQAPRU6cHYSkS8hIxl-zbcts9yt8_GtYcSh_R0nbYnWL5lFX";
+const API = "https://BACKEND-KAMU.up.railway.app";
 
 export default function App() {
-  const [tonConnectUI] = useTonConnectUI();
-  const [total, setTotal] = useState(0);
+  const wallet = useTonWallet();
+  const user_id = wallet?.account?.address || "guest";
 
-  const user_id = "user1";
-
-  const load = async () => {
-    const res = await fetch(API + "/user", {
-      method: "POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({user_id})
-    });
-    const data = await res.json();
-    setTotal(data.total);
-  };
+  const [data, setData] = useState({
+    balance: 0,
+    energy: 100,
+    level: 1
+  });
 
   useEffect(() => {
-    load();
-  }, []);
-
-  const mint = async () => {
-    try {
-      await tonConnectUI.sendTransaction({
-        validUntil: Date.now() + 60000,
-        messages: [
-          {
-            address: RECEIVER,
-            amount: "100000000"
-          }
-        ]
-      });
-
-      await fetch(API + "/deposit", {
+    const interval = setInterval(() => {
+      fetch(API + "/sync", {
         method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({
-          user_id,
-          amount: 0.1
-        })
-      });
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ user_id })
+      })
+      .then(res => res.json())
+      .then(setData);
+    }, 2000);
 
-      load();
+    return () => clearInterval(interval);
+  }, [user_id]);
 
-    } catch (e) {
-      console.log("cancel");
-    }
+  const tap = () => {
+    fetch(API + "/tap", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ user_id })
+    });
   };
 
   return (
-    <div style={{
-      background:"#0b0f1a",
-      height:"100vh",
-      color:"#fff",
-      textAlign:"center",
-      paddingTop:"40px"
-    }}>
-      
+    <div style={{padding:20,color:"#fff"}}>
       <TonConnectButton />
 
-      <h1>Total Deposit</h1>
-      <h2>{total} TON</h2>
+      <h1>{data.balance.toFixed(2)} TON</h1>
 
-      <button onClick={mint}>
-        Mint 0.1 TON
-      </button>
+      <motion.div
+        onClick={tap}
+        whileTap={{ scale: 0.9 }}
+        style={{
+          width:150,
+          height:150,
+          borderRadius:"50%",
+          background:"gold",
+          margin:"20px auto"
+        }}
+      />
 
+      <p>Energy: {data.energy}</p>
+      <p>Level: {data.level}</p>
     </div>
   );
 }
