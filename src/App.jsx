@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { TonConnectButton, useTonConnectUI } from "@tonconnect/ui-react";
 
-const API = "https://ISI-LINK-RAILWAY";
-const RECEIVER = "ISI-WALLET-KAMU"; // wallet TON kamu
+const API = "https://mining-production-ad0d.up.railway.app";
+const RECEIVER = "UQAPRU6cHYSkS8hIxl-zbcts9yt8_GtYcSh_R0nbYnWL5lFX"; // wallet TON kamu
 
 export default function App() {
   const [tonConnectUI] = useTonConnectUI();
