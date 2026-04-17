@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { TonConnectButton, useTonWallet } from "@tonconnect/ui-react";
 import { motion } from "framer-motion";
 
-const API = "https://BACKEND-KAMU.up.railway.app";
+const API = "https://mining-production-ad0d.up.railway.app";
 
 export default function App() {
   const wallet = useTonWallet();
