@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-const API = "https://mining-production-ad0d.up.railway.app/";
+const API = "https://ISI-LINK-RAILWAY";
 
 export default function App() {
   const [balance, setBalance] = useState(0);
   const [energy, setEnergy] = useState(100);
-  const [clicks, setClicks] = useState([]);
+  const [effects, setEffects] = useState([]);
 
   const user_id = "user1";
 
@@ -35,34 +35,28 @@ export default function App() {
     });
 
     const id = Date.now();
-    const x = e.clientX;
-    const y = e.clientY;
-
-    setClicks((c)=>[...c,{id,x,y}]);
+    setEffects([...effects, {id, x:e.clientX, y:e.clientY}]);
 
     setTimeout(()=>{
-      setClicks((c)=>c.filter(i=>i.id!==id));
-    },1000);
+      setEffects(prev=>prev.filter(i=>i.id!==id));
+    },800);
   };
 
   return (
     <div style={{
-      background:"#0b0f1a",
-      color:"#fff",
+      background:"#05070d",
       height:"100vh",
-      textAlign:"center",
-      paddingTop:"40px"
+      color:"#fff",
+      textAlign:"center"
     }}>
-      
-      <h2>{balance}</h2>
 
-      {/* ENERGY BAR */}
+      <h1>{balance}</h1>
+
       <div style={{
         width:"80%",
         margin:"auto",
         height:"10px",
-        background:"#222",
-        borderRadius:"10px"
+        background:"#222"
       }}>
         <div style={{
           width:energy+"%",
@@ -71,38 +65,28 @@ export default function App() {
         }}/>
       </div>
 
-      {/* TAP AREA */}
       <motion.div
+        whileTap={{scale:0.9}}
         onClick={tap}
-        whileTap={{ scale: 0.9 }}
         style={{
           margin:"60px auto",
           width:"180px",
           height:"180px",
           borderRadius:"50%",
-          background:"radial-gradient(circle,#00f2ff,#1d4ed8)",
-          boxShadow:"0 0 40px #00f2ff",
-          display:"flex",
-          alignItems:"center",
-          justifyContent:"center",
-          fontSize:"24px"
+          background:"radial-gradient(circle,#00f2ff,#2563eb)",
+          boxShadow:"0 0 40px #00f2ff"
         }}
-      >
-        ⛏
-      </motion.div>
+      />
 
-      {/* FLOATING TEXT */}
-      {clicks.map(c => (
+      {effects.map(e=>(
         <motion.div
-          key={c.id}
-          initial={{ opacity:1, y:0 }}
-          animate={{ opacity:0, y:-80 }}
-          transition={{ duration:1 }}
+          key={e.id}
+          initial={{opacity:1,y:0}}
+          animate={{opacity:0,y:-80}}
           style={{
             position:"absolute",
-            left:c.x,
-            top:c.y,
-            color:"#00f2ff"
+            left:e.x,
+            top:e.y
           }}
         >
           +1
@@ -111,4 +95,4 @@ export default function App() {
 
     </div>
   );
-            }
+}
