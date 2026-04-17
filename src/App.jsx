@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 
-const API = "https://ISI-LINK-RAILWAY-KAMU";
+const API = "https://mining-production-ad0d.up.railway.app/";
 
 export default function App() {
   const [balance, setBalance] = useState(0);
